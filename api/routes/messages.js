@@ -1,33 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User");
+const Message = require("../models/Message");
 
-// @desc Get users
-// @route GET /api/users
-// @access Private
+// @desc Get messages
+// @route GET /api/messages
+// @access Public
 router.get("/", async (req, res, next) => {
   try {
-    const users = await User.find();
-
-    return res.status(200).json({
-      succes: true,
-      count: users.length,
-      data: users,
-    });
-  } catch (err) {
-    return res.send(500).json({
-      success: false,
-      error: `Error: ${err.message}`,
-    });
-  }
-});
-
-// @desc Create user
-// @route POST /api/users
-// @access Public
-router.post("/", async (req, res, next) => {
-  try {
-    const users = await Message.find();
+    const messages = await Message.find();
 
     return res.status(200).json({
       succes: true,
@@ -42,12 +22,32 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// @desc Delete users
-// @route DELETE /api/users
-// @access User
-router.delete("/", async (req, res, next) => {
+// @desc Add message
+// @route POST /api/messages
+// @access Public
+router.get("/", async (req, res, next) => {
   try {
-    const users = await Message.find();
+    const messages = await Message.find();
+
+    return res.status(200).json({
+      succes: true,
+      count: messages.length,
+      data: messages,
+    });
+  } catch (err) {
+    return res.send(500).json({
+      success: false,
+      error: `Error: ${err.message}`,
+    });
+  }
+});
+
+// @desc Delete message
+// @route DELETE /api/messages
+// @access Public
+router.get("/", async (req, res, next) => {
+  try {
+    const messages = await Message.find();
 
     return res.status(200).json({
       succes: true,

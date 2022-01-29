@@ -1,32 +1,33 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import { Home } from "./pages/Home";
+import { Login } from "./pages/Login";
+import { Routes, Route } from "react-router-dom";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { apiResponse: "" };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = { apiResponse: "" };
+  // }
 
-  callAPI() {
-    fetch("http://localhost:9000/testAPI")
-      .then((res) => res.text())
-      .then((res) => this.setState({ apiResponse: res }));
-  }
+  // callAPI() {
+  //   fetch("http://localhost:9000/testAPI")
+  //     .then((res) => res.text())
+  //     .then((res) => this.setState({ apiResponse: res }));
+  // }
 
-  componentWillMount() {
-    this.callAPI();
-  }
+  // componentWillMount() {
+  //   this.callAPI();
+  // }
 
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-          <p className="App-intro">{this.state.apiResponse}</p>
-        </header>
-        <p className="App-intro">{this.state.data}</p>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/login" element={<Login />} />
+        </Routes>
       </div>
     );
   }

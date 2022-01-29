@@ -5,14 +5,19 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const connectDB = require("./config/db");
 
 // config dotenv
 dotenv.config({ path: __dirname + "/config/config.env" });
 
+// Connect MongoDB
+connectDB();
+
 // router files
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
 const testAPIRouter = require("./routes/testAPI");
+const messagesRouter = require("./routes/messages");
+const usersRouter = require("./routes/users");
 
 const app = express();
 
@@ -30,6 +35,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
+app.use("/api/messages", messagesRouter);
+app.use("/api/users", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
