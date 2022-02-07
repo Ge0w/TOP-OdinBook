@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  username: {
+  displayName: {
     type: String,
     required: true,
   },
@@ -19,6 +19,9 @@ const UserSchema = new Schema({
   },
   friends: {
     type: Number,
+  },
+  facebookId: {
+    type: String,
   },
 });
 

@@ -10,6 +10,15 @@
   justify-content: center;
 }
 
+.navbar button {
+  position: fixed;
+  right: 10px;
+}
+
+.navbar h2 {
+  margin: 0;
+}
+
 .content {
   display: flex;
   overflow: hidden;
