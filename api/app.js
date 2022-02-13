@@ -6,9 +6,6 @@ const logger = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const cookieSession = require("cookie-session");
-const passport = require("passport");
-const passportSetup = require("./config/passport");
 
 // config dotenv
 dotenv.config({ path: __dirname + "/config/config.env" });
@@ -17,11 +14,8 @@ dotenv.config({ path: __dirname + "/config/config.env" });
 connectDB();
 
 // router files
-const indexRouter = require("./routes/index");
-const testAPIRouter = require("./routes/testAPI");
-const messagesRouter = require("./routes/messages");
-const usersRouter = require("./routes/users");
-const authRouter = require("./routes/auth");
+const messagesRouter = require("./routes/api/messages");
+const usersRouter = require("./routes/api/users");
 
 const app = express();
 
@@ -35,17 +29,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(
-  cookieSession({
-    name: "session",
-    keys: [process.env.COOKIE_SESSION],
-    maxAge: 24 * 60 * 60 * 1000,
-  })
-);
-
-//Initialize passport js
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(
   cors({
@@ -56,12 +39,8 @@ app.use(
 );
 
 //Use routers
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/testAPI", testAPIRouter);
-app.use("/api/messages", messagesRouter);
 app.use("/api/users", usersRouter);
-app.use("/auth", authRouter);
+app.use("/api/messages", messagesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

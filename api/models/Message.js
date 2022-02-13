@@ -7,15 +7,15 @@ const MessageSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  c: {
-    type: String,
-  },
   message: {
     type: String,
     require: [true, "Please add text"],
   },
   likes: {
     type: Number,
+  },
+  comments: {
+    type: Array,
   },
 });
 

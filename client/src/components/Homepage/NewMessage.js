@@ -1,0 +1,41 @@
+import React, { useState, useContext } from "react";
+import { GlobalContext } from "../../context/GlobalState";
+
+export const NewMessage = () => {
+  const [message, setMessage] = useState("");
+  const { addMessage } = useContext(GlobalContext);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const newMessage = {
+      id: Math.floor(Math.random() * 10000000),
+      message,
+      user: "cold blooded mofo",
+    };
+
+    addMessage(newMessage);
+  };
+
+  return (
+    <div className="container">
+      <form onSubmit={onSubmit}>
+        <div className="mb-3">
+          <label htmlFor="newMessage" className="form-label">
+            Watcha thinkin?
+          </label>
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="form-control"
+            id="newMessage"
+          ></input>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+};

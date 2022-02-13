@@ -52,3 +52,9 @@
   flex: 5;
   align-items: center;
 }
+
+.page-break {
+  width: 2px;
+  background: grey;
+  min-height: 80%;
+}

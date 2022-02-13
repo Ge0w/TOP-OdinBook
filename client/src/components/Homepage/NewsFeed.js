@@ -1,12 +1,12 @@
 import React from "react";
 import { NewMessage } from "./NewMessage";
-import { Message } from "./Message";
+import { Messages } from "./Messages";
 
 export const NewsFeed = () => {
   return (
-    <div>
+    <>
       <NewMessage />
-      <Message />
-    </div>
+      <Messages />
+    </>
   );
 };

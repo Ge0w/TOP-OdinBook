@@ -1,19 +1,13 @@
 import React from "react";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { Form } from "../components/Login-Page/Form";
+import { Auth } from "../components/Login-Page/Auth";
 
 export const Login = () => {
-  const google = () => {
-    window.open("http://localhost:3000/auth/google");
-  };
-
   return (
-    <div>
-      <button type="button" className="btn btn-primary">
-        Login with Facebook <FaFacebook />
-      </button>
-      <button type="button" className="btn btn-danger" onClick={google}>
-        Login with Google <FaGoogle />
-      </button>
+    <div className="login d-flex justify-content-around min-vh-100">
+      <Auth />
+      <div className="page-break"></div>
+      <Form />
     </div>
   );
 };

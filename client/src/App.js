@@ -5,30 +5,17 @@ import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Routes, Route } from "react-router-dom";
 
+import { GlobalProvider } from "./context/GlobalState";
+
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = { apiResponse: "" };
-  // }
-
-  // callAPI() {
-  //   fetch("http://localhost:9000/testAPI")
-  //     .then((res) => res.text())
-  //     .then((res) => this.setState({ apiResponse: res }));
-  // }
-
-  // componentWillMount() {
-  //   this.callAPI();
-  // }
-
   render() {
     return (
-      <div className="App">
+      <GlobalProvider>
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/login" element={<Login />} />
         </Routes>
-      </div>
+      </GlobalProvider>
     );
   }
 }

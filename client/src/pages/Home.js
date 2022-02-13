@@ -1,8 +1,8 @@
 import React from "react";
-import { Navbar } from "../components/Navbar";
-import { FriendList } from "../components/FriendList";
-import { NewsFeed } from "../components/NewsFeed";
-import { SideBar } from "../components/SideBar";
+import { Navbar } from "../components/Homepage/Navbar";
+import { FriendList } from "../components/Homepage/FriendList";
+import { NewsFeed } from "../components/Homepage/NewsFeed";
+import { SideBar } from "../components/Homepage/SideBar";
 
 export const Home = () => {
   return (
