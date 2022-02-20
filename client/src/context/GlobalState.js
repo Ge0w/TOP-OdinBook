@@ -1,5 +1,6 @@
 import React, { createContext, useReducer } from "react";
 import { AppReducer } from "./AppReducer";
+import axios from "axios";
 
 // Initial state
 const initialState = {
@@ -13,6 +14,8 @@ const initialState = {
     { id: 2, user: "cold blooded mofo" },
     { id: 3, user: "green gian11" },
   ],
+  error: null,
+  loading: true,
 };
 
 // Create context
@@ -23,6 +26,22 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   //Actions
+  async function getMessages() {
+    try {
+      const res = await axios.get("/api/messages");
+
+      dispatch({
+        type: "GET_MESSAGES",
+        payload: res.data.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: "TRANSACTION_ERROR",
+        payload: err.response.data.error,
+      });
+    }
+  }
+
   function addMessage(message) {
     dispatch({
       type: "ADD_MESSAGE",
@@ -32,7 +51,14 @@ export const GlobalProvider = ({ children }) => {
 
   return (
     <GlobalContext.Provider
-      value={{ messages: state.messages, friends: state.friends, addMessage }}
+      value={{
+        messages: state.messages,
+        error: state.error,
+        loading: state.loading,
+        getMessages,
+        friends: state.friends,
+        addMessage,
+      }}
     >
       {children}
     </GlobalContext.Provider>
