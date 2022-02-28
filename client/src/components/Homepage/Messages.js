@@ -11,7 +11,7 @@ export const Messages = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container mt-2">
       {messages.map((message) => (
         <Message message={message} />
       ))}

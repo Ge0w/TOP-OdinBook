@@ -9,16 +9,14 @@ export const NewMessage = () => {
     e.preventDefault();
 
     const newMessage = {
-      id: Math.floor(Math.random() * 10000000),
       message,
-      user: "cold blooded mofo",
     };
 
     addMessage(newMessage);
   };
 
   return (
-    <div className="container">
+    <div className="container mt-4">
       <form onSubmit={onSubmit}>
         <div className="mb-3">
           <label htmlFor="newMessage" className="form-label">

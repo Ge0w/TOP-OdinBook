@@ -4,11 +4,7 @@ import axios from "axios";
 
 // Initial state
 const initialState = {
-  messages: [
-    { id: 1, message: "hey there", user: "cold blooded mofo" },
-    { id: 2, message: "hey you", user: "trinsith" },
-    { id: 3, message: "what's good", user: "green gian11" },
-  ],
+  messages: [],
   friends: [
     { id: 1, user: "trinsith" },
     { id: 2, user: "cold blooded mofo" },
@@ -42,11 +38,26 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  function addMessage(message) {
-    dispatch({
-      type: "ADD_MESSAGE",
-      payload: message,
-    });
+  async function addMessage(message) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const res = await axios.post("/api/messages", message, config);
+
+      dispatch({
+        type: "ADD_MESSAGE",
+        payload: res.data.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: "TRANSACTION_ERROR",
+        payload: err.response.data.error,
+      });
+    }
   }
 
   return (
