@@ -4,27 +4,22 @@ const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../../models/User");
+const { protect } = require("../../middleware/authMiddleware");
 
 // @desc Get users
 // @route GET /api/users
 // @access Private
 router.get(
   "/",
+  protect,
   asyncHandler(async (req, res, next) => {
-    try {
-      const users = await User.find();
+    const { _id, name, email } = await User.findById(req.user.id);
 
-      return res.status(200).json({
-        succes: true,
-        count: users.length,
-        data: users,
-      });
-    } catch (err) {
-      return res.send(500).json({
-        success: false,
-        error: `Error: ${err.message}`,
-      });
-    }
+    res.status(200).json({
+      id: _id,
+      name,
+      email,
+    });
   })
 );
 
@@ -34,25 +29,68 @@ router.get(
 router.post(
   "/",
   asyncHandler(async (req, res, next) => {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!username || !email || !password) {
+    if (!name || !email || !password) {
       res.status(400);
       throw new Error("Please add all fields");
     }
 
-    try {
-      const user = await User.create(req.body);
+    // Check if user exists
+    const userExists = await User.findOne({ email });
 
-      return res.status(201).json({
-        success: true,
-        data: user,
+    if (userExists) {
+      res.status(400);
+      throw new Error("User already exists");
+    }
+
+    // Hash password
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
+
+    // Create user
+
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    if (user) {
+      res.status(201).json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
       });
-    } catch (err) {
-      return res.status(500).json({
-        success: false,
-        error: `Error: ${err.user}`,
+    } else {
+      res.status(400);
+      throw new Error("Invalid user data");
+    }
+  })
+);
+
+// @desc Authenticate a user
+// @route POST /api/users/login
+// @access Public
+router.post(
+  "/login",
+  asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    //Check for user email
+    const user = await User.findOne({ email });
+
+    if (user && (await bcryptjs.compare(password, user.password))) {
+      res.json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
       });
+    } else {
+      res.status(400);
+      throw new Error("Invalid credentials");
     }
   })
 );
@@ -61,15 +99,16 @@ router.post(
 // @route DELETE /api/users
 // @access User
 router.delete(
-  "/",
+  "/:id",
+  protect,
   asyncHandler(async (req, res, next) => {
     try {
-      const users = await Message.find();
+      const user = await User.findById(req.params.id);
+
+      await User.deleteOne(user);
 
       return res.status(200).json({
-        succes: true,
-        count: messages.length,
-        data: messages,
+        success: true,
       });
     } catch (err) {
       return res.send(500).json({
@@ -79,5 +118,12 @@ router.delete(
     }
   })
 );
+
+//Generate Token
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+};
 
 module.exports = router;
