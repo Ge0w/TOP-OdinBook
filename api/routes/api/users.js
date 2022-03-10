@@ -77,7 +77,6 @@ router.post(
   "/login",
   asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-
     //Check for user email
     const user = await User.findOne({ email });
 

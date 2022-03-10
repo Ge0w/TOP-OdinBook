@@ -3,16 +3,7 @@ import { AppReducer } from "./AppReducer";
 import axios from "axios";
 
 // Initial state
-const initialState = {
-  messages: [],
-  friends: [
-    { id: 1, user: "trinsith" },
-    { id: 2, user: "cold blooded mofo" },
-    { id: 3, user: "green gian11" },
-  ],
-  error: null,
-  loading: true,
-};
+const initialState = {};
 
 // Create context
 export const GlobalContext = createContext(initialState);
@@ -22,6 +13,7 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   //Actions
+  //Get Messages
   async function getMessages() {
     try {
       const res = await axios.get("/api/messages");
@@ -38,6 +30,7 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  // Add Message
   async function addMessage(message) {
     const config = {
       headers: {
@@ -60,6 +53,68 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  //Get Users
+  async function getUsers() {
+    try {
+      const res = await axios.get("/api/users");
+
+      dispatch({
+        type: "GET_USERS",
+        payload: res.data.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: "TRANSACTION_ERROR",
+        payload: err.response.data.error,
+      });
+    }
+  }
+
+  //Login user
+  async function loginUser(user) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      const res = await axios.post("/api/users/login", user, config);
+
+      dispatch({
+        type: "LOGIN_USER",
+        payload: res.data.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: "TRANSACTION_ERROR",
+        payload: err.response.data.error,
+      });
+    }
+  }
+
+  // Add User
+  async function addUser(user) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const res = await axios.post("/api/users", user, config);
+
+      dispatch({
+        type: "ADD_USER",
+        payload: res.data.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: "TRANSACTION_ERROR",
+        payload: err.response.data.error,
+      });
+    }
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -69,6 +124,9 @@ export const GlobalProvider = ({ children }) => {
         getMessages,
         friends: state.friends,
         addMessage,
+        getUsers,
+        addUser,
+        loginUser,
       }}
     >
       {children}

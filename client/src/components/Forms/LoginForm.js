@@ -1,29 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { GlobalContext } from "../../context/GlobalState";
 
 export const Form = () => {
-  const [user, setUser] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const { email, password } = formData;
+
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const { loginUser } = useContext(GlobalContext);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const userData = {
+      email,
+      password,
+    };
+
+    loginUser(userData);
+  };
 
   return (
     <section className="d-flex justify-content-center align-items-center">
       <div className="d-flex justify-content-center align-items-center">
         <form
-          action="/login"
-          method="POST"
-          className="p-5 d-flex flex-column justify-content-center"
+          onSubmit={onSubmit}
+          className="form-group p-5 d-flex flex-column justify-content-center"
         >
           {/* Username Input */}
           <div className="form-group pb-2">
-            <label className="form-label" htmlFor="username">
-              Username
+            <label className="form-label" htmlFor="email">
+              Email
             </label>
             <input
-              name="username"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-              type="text"
+              name="email"
+              value={email}
+              onChange={onChange}
+              type="email"
               className="form-control form-control-lg"
-              placeholder="Enter Username"
+              placeholder="Enter email"
             />
           </div>
 
@@ -36,7 +60,7 @@ export const Form = () => {
               name="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={onChange}
               className="form-control form-control-lg"
               placeholder="Enter password"
             />
@@ -51,11 +75,8 @@ export const Form = () => {
                 value=""
                 id="form1Example3"
               />
-              <label className="form-check-label" htmlFor="form1Example3">
-                Remember me
-              </label>
+              <label className="form-check-label">Remember me</label>
             </div>
-            <button>Forgot password?</button>
           </div>
 
           {/* <!-- Submit button --> */}
@@ -67,7 +88,7 @@ export const Form = () => {
             <p className="text-center fw-bold mx-1 mb-0 text-muted">OR</p>
           </div>
 
-          <button className="btn btn-primary btn-lg btn-block" role="button">
+          <button className="btn btn-primary btn-lg btn-block">
             Register here
           </button>
         </form>
